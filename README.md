@@ -5,7 +5,7 @@
 A Laravel Dictionary package
 ===
 
-This package serves the functionalities of a simple dictionary. Mainly created for an own use case, this package will be helpful if you have a single table of words that need to be translated.
+This package serves the functionality of a simple dictionary. Mainly created for an own use case, this package will be helpful if you have a single table of words that need to be translated.
 
 If you are looking a package that you can use for translation you Eloquent Models, have a look at [aheenam/laravel-translatable](https://github.com/Aheenam/laravel-translatable)
 
@@ -145,18 +145,18 @@ By default every created word and every created translation will have a `is_veri
 ```php
 <?php
 
-dictionary()->word('word')->verify() // is_verified is true now
-dictionary()->word('word')->unverify() // is_verified is false now
+dictionary()->word('word')->verify(); // is_verified is true now
+dictionary()->word('word')->unverify(); // is_verified is false now
 
 dictionary()
     ->word('word')
     ->translations()
     ->first()
-    ->verify() // is_verified of the first translation is true now
+    ->verify(); // is_verified of the first translation is true now
 
 dictionary()
     ->word('word')
     ->translations()
     ->first()
-    ->unverify() // is_verified of the first translation is false now
+    ->unverify(); // is_verified of the first translation is false now
 ```
