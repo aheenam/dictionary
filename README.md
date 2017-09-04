@@ -92,8 +92,71 @@ You can also translate the word into a specific language
 ```php
 <?php
 
-// returns a translation string in German
+// returns a collection of translation strings in German
 $translation = dictionary()->word('key')->in('de');
 ```
 
-If there are mulitple translations, the result will be an array.
+### Store, Update & Deletion of words and translations
+
+Additionally to reading and searching for words and translations you can also add new, edit existing ones or even delete them:
+
+```php
+<?php
+
+// store a new word
+dictionary()->word('word')->info(['gender' => 'f'])->store();
+
+// add a translation
+dictionary()->word('word')->translate('de', 'Schlüssel');
+
+// edit a word
+dictionary()->word('word')->update([
+    'key' => 'words',
+    'info' => []
+])
+
+// edit a translation
+dictionary()
+    ->word('word')
+    ->translations()
+    ->where('key', 'Wort')
+    ->update([
+        'key' => 'Wörter'
+    ]);
+
+// delete a word (deletes translations as well)
+dictionary()
+    ->word('word')
+    ->delete();
+
+// delete a translation
+dictionary()
+    ->word('word')
+    ->translations()
+    ->first()
+    ->delete();
+
+```
+
+### Verification
+
+By default every created word and every created translation will have a `is_verified` flag set to false. You can simply verify them by calling the `verify()` function. You can also unverify them with `unverify()`
+
+```php
+<?php
+
+dictionary()->word('word')->verify() // is_verified is true now
+dictionary()->word('word')->unverify() // is_verified is false now
+
+dictionary()
+    ->word('word')
+    ->translations()
+    ->first()
+    ->verify() // is_verified of the first translation is true now
+
+dictionary()
+    ->word('word')
+    ->translations()
+    ->first()
+    ->unverify() // is_verified of the first translation is false now
+```
