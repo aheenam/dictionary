@@ -21,6 +21,11 @@ class DictionaryServiceProvider extends ServiceProvider
     public function boot()
     {
     	$this->loadMigrationsFrom(__DIR__ . '/../database/migrations/');
+
+	    $this->publishes([
+		    __DIR__.'/../config/dictionary.php' => config_path('dictionary.php'),
+	    ], "config");
+
     }
 
 
@@ -31,5 +36,8 @@ class DictionaryServiceProvider extends ServiceProvider
      */
     public function register()
     {
+	    $this->mergeConfigFrom(
+		    __DIR__.'/../config/dictionary.php', 'dictionary'
+	    );
     }
 }

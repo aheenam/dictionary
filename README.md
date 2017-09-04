@@ -53,7 +53,6 @@ return [
      * Following languages are those into which the main language can 
      * be translated into
      */
-    
     "translatable_languages" => ["de", "ta"],
 
 ];
@@ -113,7 +112,7 @@ dictionary()->word('word')->translate('de', 'Schlüssel');
 dictionary()->word('word')->update([
     'key' => 'words',
     'info' => []
-])
+]);
 
 // edit a translation
 dictionary()

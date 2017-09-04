@@ -2,6 +2,7 @@
 
 namespace Aheenam\Dictionary\Models;
 
+use Aheenam\Dictionary\Exceptions\LanguageNotDefinedException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -87,6 +88,28 @@ class Word extends Model
 	{
 		$this->setAttribute('info', $info->toJson());
 		return $this;
+	}
+
+	/**
+	 * @param $languageCode
+	 * @param $key
+	 *
+	 * @return Word $this
+	 * @throws LanguageNotDefinedException
+	 */
+	public function translate($languageCode, $key)
+	{
+
+		if (!collect(config('dictionary.translatable_languages'))->contains($languageCode))
+			throw new LanguageNotDefinedException("The language $languageCode is not defined in your config");
+
+		$this->translations()->updateOrCreate([
+			'language' => $languageCode,
+			'key' => $key
+		]);
+
+		return $this;
+
 	}
 
 }

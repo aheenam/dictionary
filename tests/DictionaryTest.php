@@ -2,10 +2,12 @@
 
 namespace Aheenam\Dictionary\Test;
 
+use Aheenam\Dictionary\Exceptions\LanguageNotDefinedException;
 use Aheenam\Dictionary\Models\Translation;
 use Aheenam\Dictionary\Models\Word;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 
 class DictionaryTest extends TestCase
 {
@@ -137,6 +139,60 @@ class DictionaryTest extends TestCase
 		$this->assertJson(Word::all()->first()->info);
 
 		$this->assertEquals(json_encode(['gender' => 'f']), Word::all()->first()->info);
+
+	}
+
+	/** @test */
+	public function it_can_add_a_translation()
+	{
+		// arrange
+		$word = factory(Word::class)->create([
+			'key' => 'word'
+		]);
+
+		// act
+		dictionary()->word('word')->translate('de', 'Wort');
+
+		// assert
+		$this->assertCount(1, $word->translations);
+		$this->assertEquals('Wort', $word->translations->first()->key);
+
+	}
+
+	/** @test */
+	public function it_does_not_store_translation_twice()
+	{
+		// arrange
+		$word = factory(Word::class)->create([
+			'key' => 'word'
+		]);
+
+		// act
+		dictionary()->word('word')->translate('de', 'Wort');
+		dictionary()->word('word')->translate('de', 'Wort');
+		dictionary()->word('word')->translate('ta', 'Wort');
+
+		// assert
+		$this->assertCount(2, $word->translations);
+		$this->assertEquals('Wort', $word->translations->first()->key);
+
+	}
+
+	/** @test */
+	public function it_throws_an_exception_if_language_not_setup()
+	{
+		// arrange
+		factory(Word::class)->create([
+			'key' => 'word'
+		]);
+
+		Config::set('dictionary.translatable_languages', ["de", "ta"]);
+
+		// expect
+		$this->expectException(LanguageNotDefinedException::class);
+
+		// act
+		dictionary()->word('word')->translate('fr', 'Wort');
 
 	}
 
