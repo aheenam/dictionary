@@ -45,4 +45,25 @@ class Word extends Model
 			->first();
 	}
 
+	/**
+	 * @param $languageCode
+	 *
+	 * @return \Illuminate\Database\Eloquent\Collection|Translation
+	 */
+	public function in($languageCode)
+	{
+		$translations = $this
+			->translations()
+			->where('language', $languageCode)
+			->get();
+
+		if ($translations->count() === 0)
+			return null;
+
+		if ($translations->count() === 1)
+			return $translations->first();
+
+		return $translations;
+	}
+
 }

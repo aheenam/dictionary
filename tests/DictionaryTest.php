@@ -60,4 +60,69 @@ class DictionaryTest extends TestCase
 	    $this->assertInstanceOf(Word::class, $result);
     }
 
+    /** @test */
+    public function it_returns_translations_of_word_in_a_specific_language()
+    {
+    	// arrange
+    	$word = factory(Word::class)->create([
+    		'key' => 'TestWord'
+	    ]);
+
+    	$word->translations()->saveMany([
+		    factory(Translation::class)->make(['key' => 'GermanTranslation', 'language' => 'de']),
+		    factory(Translation::class)->make(['key' => 'GermanTranslation2', 'language' => 'de']),
+		    factory(Translation::class)->make(['key' => 'FrenchTranslation', 'language' => 'fr']),
+	    ]);
+
+    	// act
+	    $translations = dictionary()->word('TestWord')->in('de');
+
+	    // assert
+	    $this->assertInstanceOf(Collection::class, $translations);
+	    $this->assertCount(2, $translations);
+
+    }
+
+	/** @test */
+	public function it_returns_translation_if_only_one_result_for_specific_language()
+	{
+		// arrange
+		$word = factory(Word::class)->create([
+			'key' => 'TestWord'
+		]);
+
+		$word->translations()->saveMany([
+			factory(Translation::class)->make(['key' => 'GermanTranslation', 'language' => 'de']),
+			factory(Translation::class)->make(['key' => 'FrenchTranslation', 'language' => 'fr']),
+		]);
+
+		// act
+		$translation = dictionary()->word('TestWord')->in('de');
+
+		// assert
+		$this->assertInstanceOf(Translation::class, $translation);
+
+	}
+
+	/** @test */
+	public function it_returns_null_if_no_result_for_specific_language()
+	{
+		// arrange
+		$word = factory(Word::class)->create([
+			'key' => 'TestWord'
+		]);
+
+		$word->translations()->saveMany([
+			factory(Translation::class)->make(['key' => 'GermanTranslation', 'language' => 'de']),
+			factory(Translation::class)->make(['key' => 'FrenchTranslation', 'language' => 'fr']),
+		]);
+
+		// act
+		$translation = dictionary()->word('TestWord')->in('ch');
+
+		// assert
+		$this->assertEquals(null, $translation);
+
+	}
+
 }
