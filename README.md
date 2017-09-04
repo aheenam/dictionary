@@ -27,3 +27,73 @@ You can install the package by simply pulling it from packagist:
 ```bash
 composer require aheenam/dictionary
 ```
+
+Configuration
+---
+
+This package has some simple configurations. You can modify them by publishing the config file `php artisan vendor:publish --provider="Aheenam\Dictionary\DictionaryServiceProvider" --tag="config"`
+
+This content of the published config file will look like this:
+
+```php
+<?php
+
+return [
+
+    /**
+     * This is the main language of the package, this language differs
+     * from other languages as words in this language can have
+     * additional information
+     */
+    "main_language" => "en",
+
+
+
+    /**
+     * Following languages are those into which the main language can 
+     * be translated into
+     */
+    
+    "translatable_languages" => ["de", "ta"],
+
+];
+```
+
+Usage
+---
+
+The main intention of this package is to browse words and their translations as easy as possible. Therefore there are some helpful methods that make working with it a lot easier:
+
+### Search a word
+
+Easily search a word. It does not matter of your given key is in the main language or one of the translations. The result will be a collection of `Aheenam\Dictionary\Models\Word` containing the translations as attributes.
+
+```php
+<?php
+
+// returns a collection of `Aheenam\Dictionary\Models\Word`
+$word = dictionary()->search('key');
+
+// returns a collection of `Aheenam\Dictionary\Models\Translation`
+$translations = dictionary()->search('key')->first()->translations();
+```
+
+If you just want to search the words of your main language, use the `word()` method. As words 'key' attribute is unique, the result will be an instance of `Aheenam\Dictionary\Models\Word` (if there is no result, it will return `null`)
+
+```php
+<?php
+
+// returns an instance of `Aheenam\Dictionary\Models\Word`
+$word = dictionary()->word('key');
+```
+
+You can also translate the word into a specific language
+
+```php
+<?php
+
+// returns a translation string in German
+$translation = dictionary()->word('key')->in('de');
+```
+
+If there are mulitple translations, the result will be an array.
