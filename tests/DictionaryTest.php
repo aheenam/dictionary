@@ -5,6 +5,7 @@ namespace Aheenam\Dictionary\Test;
 use Aheenam\Dictionary\Models\Translation;
 use Aheenam\Dictionary\Models\Word;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Collection;
 
 class DictionaryTest extends TestCase
 {
@@ -39,7 +40,24 @@ class DictionaryTest extends TestCase
 
 	    // assert
 	    $this->assertCount(2, $result);
+	    $this->assertInstanceOf(Collection::class, $result);
 
+    }
+
+    /** @test */
+    public function it_finds_a_word_by_key()
+    {
+
+	    // arrange
+	    factory(Word::class)->create([
+		    'key' => 'TestWord'
+	    ]);
+
+	    // act
+	    $result = dictionary()->word('TestWord');
+
+	    // assert
+	    $this->assertInstanceOf(Word::class, $result);
     }
 
 }

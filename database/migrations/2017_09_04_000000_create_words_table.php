@@ -15,7 +15,7 @@ class CreateWordsTable extends Migration
 	{
 		Schema::create('words', function (Blueprint $table) {
 			$table->increments('id');
-			$table->string('key');
+			$table->string('key')->unique();
 			$table->json('info');
 			$table->boolean('is_verified')->default(false);
 			$table->timestamps();

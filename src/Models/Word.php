@@ -31,4 +31,18 @@ class Word extends Model
 			->get();
 	}
 
+	/**
+	 * finds word by query
+	 *
+	 * @param string $query
+	 *
+	 * @return Word|Model
+	 */
+	public function word($query)
+	{
+		return $this
+			->where('key', 'like', $query)
+			->first();
+	}
+
 }
