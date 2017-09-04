@@ -104,7 +104,7 @@ Additionally to reading and searching for words and translations you can also ad
 <?php
 
 // store a new word
-dictionary()->word('word')->info(['gender' => 'f'])->store();
+dictionary()->add('word')->info(collect(['gender' => 'f']))->save();
 
 // add a translation
 dictionary()->word('word')->translate('de', 'Schlüssel');

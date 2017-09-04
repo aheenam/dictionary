@@ -4,6 +4,7 @@ namespace Aheenam\Dictionary\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class Word extends Model
 {
@@ -64,6 +65,28 @@ class Word extends Model
 			return $translations->first();
 
 		return $translations;
+	}
+
+	/**
+	 * @param $key
+	 *
+	 * @return Word $this
+	 */
+	public function add($key)
+	{
+		$this->setAttribute('key', $key);
+		return $this;
+	}
+
+	/**
+	 * @param Collection|null $info
+	 *
+	 * @return $this
+	 */
+	public function info(Collection $info = null)
+	{
+		$this->setAttribute('info', $info->toJson());
+		return $this;
 	}
 
 }

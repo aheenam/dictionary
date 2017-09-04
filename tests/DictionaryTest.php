@@ -125,4 +125,19 @@ class DictionaryTest extends TestCase
 
 	}
 
+	/** @test */
+	public function it_can_store_a_word()
+	{
+		// act
+		dictionary()->add('word')->info(collect(['gender' => 'f']))->save();
+
+		// assert
+		$this->assertCount(1, Word::all());
+		$this->assertEquals('word', Word::all()->first()->key);
+		$this->assertJson(Word::all()->first()->info);
+
+		$this->assertEquals(json_encode(['gender' => 'f']), Word::all()->first()->info);
+
+	}
+
 }
