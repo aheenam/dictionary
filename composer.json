@@ -22,7 +22,10 @@
     "autoload": {
       "psr-4": {
         "Aheenam\\Dictionary\\": "src"
-      }
+      },
+      "files": [
+        "src/helpers.php"
+      ]
     },
     "autoload-dev": {
       "psr-4": {
