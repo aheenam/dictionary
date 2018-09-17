@@ -2,22 +2,15 @@
 
 ---
 
-A Laravel Dictionary package
+A PHP Dictionary package
 ===
 
 This package serves the functionality of a simple dictionary. Mainly created for an own use case, this package will be helpful if you have a single table of words that need to be translated.
 
-If you are looking a package that you can use for translation you Eloquent Models, have a look at [aheenam/laravel-translatable](https://github.com/Aheenam/laravel-translatable)
-
 Requirements
 ---
 
-This package is build to be used with Laravel. So it has a few requirements that must be met.
-
-- PHP >= 7.1
-- Laravel >= 5.5
-
-This package may also work with lower version such as PHP 5.6 or 7.0 and also with Laravel 5.3 or 5.4 but there is no guarantee for it and there will be not fixes for issues regarding older versions.
+This package is build to be used with `php 7.2 or higher`.
 
 Installation
 ---
@@ -28,134 +21,62 @@ You can install the package by simply pulling it from packagist:
 composer require aheenam/dictionary
 ```
 
-Configuration
----
-
-This package has some simple configurations. You can modify them by publishing the config file `php artisan vendor:publish --provider="Aheenam\Dictionary\DictionaryServiceProvider" --tag="config"`
-
-This content of the published config file will look like this:
-
-```php
-<?php
-
-return [
-
-    /**
-     * This is the main language of the package, this language differs
-     * from other languages as words in this language can have
-     * additional information
-     */
-    "main_language" => "en",
-
-
-
-    /**
-     * Following languages are those into which the main language can 
-     * be translated into
-     */
-    "translatable_languages" => ["de", "ta"],
-
-];
-```
-
 Usage
 ---
 
-The main intention of this package is to browse words and their translations as easy as possible. Therefore there are some helpful methods that make working with it a lot easier:
+The main intention of this package is to browse and filter words and their translations in a given dataset. It does not provide any functionality to actually store it in a database.
 
-### Search a word
+The basic concept of this package is a dictionary as a collection of words in the base language of this dictionary. All those words have a list of translations which are basically also words, but with the difference that they are in a different language.
 
-Easily search a word. It does not matter of your given key is in the main language or one of the translations. The result will be a collection of `Aheenam\Dictionary\Models\Word` containing the translations as attributes.
+The word and its translations together form an entry of the dictionary. A entry must have exactly one word in the base language of the dictionary to be added to it.
+
+Once you have a full dictionary of entries, you can use this package to search and filter in this dictionary.
+
+### A dictionary
+
+To use this package you need an instance of a dictionary first. The dictionary must be declared with a base language.
 
 ```php
 <?php
+use Aheenam\Dictionary\Dictionary;
+use Aheenam\Dictionary\Language;
 
-// returns a collection of `Aheenam\Dictionary\Models\Word`
-$word = dictionary()->search('key');
-
-// returns a collection of `Aheenam\Dictionary\Models\Translation`
-$translations = dictionary()->search('key')->first()->translations();
+$baseLanguage = new Language('ta');
+$dictionary = new Dictionary($baseLanguage);
 ```
 
-If you just want to search the words of your main language, use the `word()` method. As words 'key' attribute is unique, the result will be an instance of `Aheenam\Dictionary\Models\Word` (if there is no result, it will return `null`)
+### A Dictionary Entry
+
+The dictionary is a collection of a lot of words that can be translated. Words in the base language of the dictionary and the translations of this word for an entry.
 
 ```php
 <?php
+use Aheenam\Dictionary\Word;
+use Aheenam\Dictionary\Entry;
 
-// returns an instance of `Aheenam\Dictionary\Models\Word`
-$word = dictionary()->word('key');
-```
-
-You can also translate the word into a specific language
-
-```php
-<?php
-
-// returns a collection of translation strings in German
-$translation = dictionary()->word('key')->in('de');
-```
-
-### Store, Update & Deletion of words and translations
-
-Additionally to reading and searching for words and translations you can also add new, edit existing ones or even delete them:
-
-```php
-<?php
-
-// store a new word
-dictionary()->add('word')->info(collect(['gender' => 'f']))->save();
-
-// add a translation
-dictionary()->word('word')->translate('de', 'Schlüssel');
-
-// edit a word
-dictionary()->word('word')->update([
-    'key' => 'words',
-    'info' => []
+$language = new Language('ta');
+$tamilWord = new Word('அம்மா', $language, [
+    'grammatical_gender' => 'f'
 ]);
 
-// edit a translation
-dictionary()
-    ->word('word')
-    ->translations()
-    ->where('key', 'Wort')
-    ->update([
-        'key' => 'Wörter'
-    ]);
+$language = new Language('de');
+$germanWord = new Word('Mutter', $language, [
+    'grammatical_gender' => 'f',
+    'article' => 'die'
+]);
 
-// delete a word (deletes translations as well)
-dictionary()
-    ->word('word')
-    ->delete();
-
-// delete a translation
-dictionary()
-    ->word('word')
-    ->translations()
-    ->first()
-    ->delete();
-
+// A entry accepts as many instances of word as needed
+$entry = new Entry($tamilWord, $germanWord);
 ```
 
-### Verification
+#### Add entry to dictionary
 
-By default every created word and every created translation will have a `is_verified` flag set to false. You can simply verify them by calling the `verify()` function. You can also unverify them with `unverify()`
+Once you have an entry you can add it to the dictionary using the `add()` method.
 
 ```php
 <?php
 
-dictionary()->word('word')->verify(); // is_verified is true now
-dictionary()->word('word')->unverify(); // is_verified is false now
-
-dictionary()
-    ->word('word')
-    ->translations()
-    ->first()
-    ->verify(); // is_verified of the first translation is true now
-
-dictionary()
-    ->word('word')
-    ->translations()
-    ->first()
-    ->unverify(); // is_verified of the first translation is false now
+$dictionary->add($entry);
 ```
+
+Note that you have to make sure that the entry contains exactly one word in the base language. Otherwise a `Aheenam\Dictionary\MultipleBaseWordsException` exception will be thrown

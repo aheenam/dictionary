@@ -1,15 +1,12 @@
 {
     "name": "aheenam/dictionary",
     "description": "A simple package to handle words and their translation as a dictionary",
-    "type": "laravel-package",
+    "type": "library",
     "require": {
-        "illuminate/support": "^5.5",
-        "illuminate/database": "^5.5"
+      "php" : "^7.2"
     },
     "require-dev": {
-        "php" : "^7.1",
-        "phpunit/phpunit": "^6.3",
-        "orchestra/testbench": "^3.5"
+        "phpunit/phpunit": "^7.3"
     },
     "license": "MIT",
     "authors": [
@@ -22,25 +19,14 @@
     "autoload": {
       "psr-4": {
         "Aheenam\\Dictionary\\": "src"
-      },
-      "files": [
-        "src/helpers.php"
-      ]
+      }
     },
     "autoload-dev": {
       "psr-4": {
         "Aheenam\\Dictionary\\Test\\": "tests"
       }
     },
-    "extra": {
-      "laravel": {
-        "providers": [
-          "Aheenam\\Dictionary\\DictionaryServiceProvider"
-        ]
-      }
-    },
     "scripts": {
-      "test": "vendor/bin/phpunit",
-      "test:windows": "vendor\\bin\\phpunit"
+      "test": "vendor/bin/phpunit"
     }
 }
