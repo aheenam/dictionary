@@ -76,3 +76,36 @@ $dictionary->add($entry);
 ```
 
 Note that you have to make sure that the entry contains exactly one word in the base language. Otherwise a `Aheenam\Dictionary\MultipleBaseWordsException` exception will be thrown
+
+### Using the Dictionary
+
+Once you have a full dictionary you can start querying it.
+
+```php
+<?php
+
+// Search for the given word in base language
+// This returns the full entry in the dictionary
+$dictionary->find('அம்மா');
+
+// Find all words that match the given query
+$dictionary->search('mother')
+
+// get all the translations of an entry
+$dictionary->find('அம்மா')->translations();
+
+// get the base word of an entry
+$dictionary->find('அம்மா')->key();
+```
+
+You can also filter the translations to only have results in specific languages:
+
+```php
+<?php
+
+// in() accepts as many languages as you want
+$dictionary
+    ->find('அம்மா')
+    ->translations()
+    ->in(new Language('de'), new Languages('es'));
+```
