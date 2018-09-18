@@ -1,19 +1,16 @@
-*NOTE: This package is still in development and yet not ready for production*
+_NOTE: This package is still in development and yet not ready for production_
 
 ---
 
-A PHP Dictionary package
-===
+# A PHP Dictionary package
 
 This package serves the functionality of a simple dictionary. Mainly created for an own use case, this package will be helpful if you have a single table of words that need to be translated.
 
-Requirements
----
+## Requirements
 
 This package is build to be used with `php 7.2 or higher`.
 
-Installation
----
+## Installation
 
 You can install the package by simply pulling it from packagist:
 
@@ -21,8 +18,7 @@ You can install the package by simply pulling it from packagist:
 composer require aheenam/dictionary
 ```
 
-Usage
----
+## Usage
 
 The main intention of this package is to browse and filter words and their translations in a given dataset. It does not provide any functionality to actually store it in a database.
 
@@ -45,7 +41,7 @@ $baseLanguage = new Language('ta');
 $dictionary = new Dictionary($baseLanguage);
 ```
 
-### A Dictionary Entry
+#### A Dictionary Entry
 
 The dictionary is a collection of a lot of words that can be translated. Words in the base language of the dictionary and the translations of this word for an entry.
 
@@ -65,7 +61,7 @@ $germanWord = new Word('Mutter', $language, [
     'article' => 'die'
 ]);
 
-// A entry accepts as many instances of word as needed
+// An entry accepts as many instances of word as needed
 $entry = new Entry($tamilWord, $germanWord);
 ```
 
