@@ -109,3 +109,24 @@ $dictionary
     ->translations()
     ->in(new Language('de'), new Languages('es'));
 ```
+
+### Updating the dictionary
+
+Previously you might have already seen how to add new entries to a dictionary. You can do this by using the `add()` method.
+
+```php
+<?php
+
+$dictionary->add($entry);
+```
+
+If you want to remove an entry you have to fetch that entry and perfom the `remove()` method on it.
+
+```php
+<?php
+
+// remove this entry from dictionary
+$dictionary
+    ->find('அம்மா')
+    ->remove();
+```
