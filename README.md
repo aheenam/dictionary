@@ -130,3 +130,47 @@ $dictionary
     ->find('அம்மா')
     ->remove();
 ```
+
+#### Updating entries
+
+There are no specific methods to update entries, but you can update the information of the key word and the information of the words translations.
+
+```php
+<?php
+
+$dictionary
+    ->find('அம்மா')
+    ->setInformation([
+        'gender' => 'female'
+    ]);
+
+$dictionary
+    ->find('அம்மா')
+    ->translations()
+    ->first()
+    ->setInformation([
+        'gender' => 'n'
+    ]);
+```
+
+However if you can not update the key or the language of a word. Since this didn't feel that logical we did not add this functionality. Instead you are supposed to remove the entry and add a new one.
+
+Since the translations are a Laravel Collection, you can just use the methods that the collection offers to remove and add words.
+
+```php
+<?php
+
+$dictionary
+    ->find('அம்மா')
+    ->translations()
+    ->forget(0);
+
+$mom = new Word('Mom', new Language('en'), [
+    'note' => 'colloquial'
+]);
+
+$dictionary
+    ->find('அம்மா')
+    ->translations()
+    ->push($mom);
+```
